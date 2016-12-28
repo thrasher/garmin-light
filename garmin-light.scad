@@ -41,28 +41,43 @@ module light_motion() {
 }
 
 module mount() {
-difference() {
-	hull() {
-		cylinder(d1=30, d2=30, h=10);
-		translate([0,25,0]) cylinder(d1=30, d2=30, h=10);
-	}
-	translate([0,25,5.2]) {
-		translate([-5.5,0,-10])cube(size=[11, 10+2.54, 10+2.54], center=false);
-		translate([0,0,-10]) {
-			cylinder(d=11.41, h=2.54+10);
-			hull(){
-				translate([0,5,0]) cylinder(d=11.41, h=2.54+10);
-				translate([0,25,0]) cylinder(d=11.41, h=2.54+10);
+	difference() {
+		hull() {
+			cylinder(d1=30, d2=30, h=10);
+			translate([0,25,0]) cylinder(d1=30, d2=30, h=10);
+		}
+		translate([0,25,5.2]) {
+			click_fit_size = 10.5;
+			translate([-click_fit_size/2,0,-10])cube(size=[click_fit_size, 10+2.54, 10+2.54], center=false);
+
+			translate([0,0,-10]) {
+				cylinder(d=11.41, h=2.54+10);
+				hull(){
+					translate([0,5,0]) cylinder(d=11.41, h=2.54+10);
+					translate([0,25,0]) cylinder(d=11.41, h=2.54+10);
+				}
+			}
+			hull() {
+				cylinder(d=7.94, h=4.8+100);
+				translate([0,25,0]) cylinder(d=7.94, h=4.8+100);
 			}
 		}
-		hull() {
-			cylinder(d=7.94, h=4.8+100);
-			translate([0,25,0]) cylinder(d=7.94, h=4.8+100);
-		}
+		// add the holes for joining to garmin mount
+		translate([0,0,-5])garmin_hole_pattern();
+
+		// diagnoal slice the front
+		translate([0,20+24,-12]) rotate([20,0,0]) cube(40, center=true);
 	}
-	translate([0,0,-5])garmin_hole_pattern();
-	translate([0,20+24,-12]) rotate([20,0,0]) cube(40, center=true);
 }
+
+// the mount, but rendered for 3d printing, and casting
+module mount_cast() {
+    mount();
+    translate([0,0,10])
+		hull() {
+			cylinder(d1=30, d2=30, h=10);
+			translate([0,25,0]) cylinder(d1=30, d2=30, h=10);
+		}
 }
 
 // render the garmin head
@@ -73,3 +88,6 @@ difference() {
 
 // render the mount
 mount();
+
+// render the urethane casting part
+//mount_cast();
